@@ -1,6 +1,6 @@
 
 var quizForm = document.getElementsByClassName("quiz");
-
+var answers = [];
 var size;
 var httpRequest = new XMLHttpRequest();
 
@@ -12,16 +12,19 @@ httpRequest.onreadystatechange = function () {
             size = data.length;
             for (var i = 0; i < data.length; i++) {
                 createDynamicQuestion(data[i], i + 1);
+                answers.push(data[i].answer);
             }
+            console.log(answers);
             var submitsection = document.createElement("section");
             submitsection.id = "submit-section";
-            var btn = document.createElement("input");
+            var btn = document.createElement("button");
             btn.id = "btn-submit";
-            btn.type = "submit";
-            btn.value = "Submit";
+            btn.type = "button";
+            btn.innerHTML = "Submit";
+            btn.onclick = checkAnswer;
 
             submitsection.appendChild(btn);
-            console.log(submitsection);
+
 
             quizForm[0].appendChild(submitsection);
         }
@@ -63,16 +66,28 @@ function createDynamicQuestion(data, n) {
         section.appendChild(optionDiv);
     }
     quizForm[0].appendChild(section);
-    console.log(section);
+
 }
 
 
 function checkAnswer() {
     //do what you need here
-    var s = location.search;
-    var ans = s.substring(1, s.length).split("&");
-    console.log(ans);
-    alert("hello");
+    var marks = 0;
+    var j = 0;
+    var radio = document.getElementsByTagName("input");
+
+    for (var i = 0; i < radio.length; i++) {
+        if (radio[i].checked == true) {
+            if (radio[i].value == answers[j]) {
+                marks += 4;
+            }
+            j++;
+
+        }
+
+    }
+    document.getElementById("result").innerHTML = "<h3>" + marks + "/20</h3>";
+    alert("your marks:" + marks + "/20");
 
 }
 
